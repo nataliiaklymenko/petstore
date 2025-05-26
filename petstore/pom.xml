@@ -25,6 +25,7 @@
     <rest-assured.version>5.5.1</rest-assured.version>
     <allure-rest-assured.version>2.29.1</allure-rest-assured.version>
     <allure.version>2.25.0</allure.version>
+    <aspectj.version>1.9.21</aspectj.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
   </properties>
 
@@ -121,11 +122,21 @@
       <artifactId>maven-surefire-plugin</artifactId>
       <version>${maven-surefire-plugin.version}</version>
       <configuration>
+        <argLine>
+          -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+        </argLine>
         <testFailureIgnore>false</testFailureIgnore>
         <systemPropertyVariables>
           <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
         </systemPropertyVariables>
       </configuration>
+      <dependencies>
+        <dependency>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjweaver</artifactId>
+          <version>${aspectj.version}</version>
+        </dependency>
+      </dependencies>
     </plugin>
     <plugin>
       <groupId>com.diffplug.spotless</groupId>
@@ -144,6 +155,22 @@
         </execution>
       </executions>
     </plugin>
+    <plugin>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-maven</artifactId>
+      <version>2.11.2</version>
+      <executions>
+        <!-- Generates Allure results after test run -->
+        <execution>
+          <id>allure-results</id>
+          <phase>verify</phase>
+          <goals>
+            <goal>report</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
   </plugins>
   </build>
 </project>
