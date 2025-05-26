@@ -1,4 +1,4 @@
-package com.nataliia.klymenko.petstore.restassured;
+package com.nataliia.klymenko.petstore.services.restassured;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;

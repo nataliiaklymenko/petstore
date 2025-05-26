@@ -1,9 +1,9 @@
 package com.nataliia.klymenko.petstore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nataliia.klymenko.petstore.order.DeleteOrderResponse;
 import com.nataliia.klymenko.petstore.order.Order;
-import com.nataliia.klymenko.petstore.order.OrderStatus;
-import com.nataliia.klymenko.petstore.restassured.RestAssuredService;
+import com.nataliia.klymenko.petstore.services.restassured.RestAssuredService;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.specification.RequestSpecification;
@@ -51,24 +51,43 @@ public class OrderTest extends TestBase {
 
     }
 
+    //TODO: there is a potential defect - we get different data by the same request and with completed status
     @Test
     public void shouldGetOrder() {
         final int TEST_ORDER_ID = 9;
 
         RequestSpecification requestSpecification = restAssuredService.getRequestSpecification(petStoreBaseUrl);
-        requestSpecification.pathParam("petId", TEST_ORDER_ID);
-        var getBuIdOrderResponse = restAssuredService.getResponse(requestSpecification, Method.GET
+        requestSpecification.pathParam("orderId", TEST_ORDER_ID);
+        var getByIdOrderResponse = restAssuredService.getResponse(requestSpecification, Method.GET
                 , V2 + BY_ID
                 , HttpStatus.OK
                 , ContentType.JSON).as(Order.class);
 
         assertAll("Order properties",
-                () -> assertTrue(getBuIdOrderResponse.getId() > 0),
-                () -> assertEquals(5, getBuIdOrderResponse.getQuantity()),
-                () -> assertEquals(TEST_ORDER_ID, getBuIdOrderResponse.getId()),
-                () -> assertTrue(getBuIdOrderResponse.isComplete()),
-                () -> assertEquals(PLACED.getValue(), getBuIdOrderResponse.getStatus())
+                () -> assertTrue(getByIdOrderResponse.getId() > 0),
+                () -> assertEquals(5, getByIdOrderResponse.getQuantity()),
+                () -> assertEquals(TEST_ORDER_ID, getByIdOrderResponse.getId()),
+                () -> assertTrue(getByIdOrderResponse.isComplete()),
+                () -> assertEquals(PLACED.getValue(), getByIdOrderResponse.getStatus())
         );
 
+    }
+
+    @Test
+    public void shouldDeleteOrder() {
+        final int TEST_ORDER_ID = 9;
+
+        RequestSpecification requestSpecification = restAssuredService.getRequestSpecification(petStoreBaseUrl);
+        requestSpecification.pathParam("orderId", TEST_ORDER_ID);
+        var deleteOrderResponse = restAssuredService.getResponse(requestSpecification, Method.DELETE
+                , V2 + BY_ID
+                , HttpStatus.OK
+                , ContentType.JSON).as(DeleteOrderResponse.class);
+
+        assertAll("Order properties",
+                () -> assertEquals(200, deleteOrderResponse.code()),
+                () -> assertEquals("unknown", deleteOrderResponse.type()),
+                () -> assertEquals("9", deleteOrderResponse.message())
+        );
     }
 }

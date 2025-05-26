@@ -1,6 +1,6 @@
 package com.nataliia.klymenko.petstore;
 
-import com.nataliia.klymenko.petstore.restassured.RestAssuredService;
+import com.nataliia.klymenko.petstore.services.restassured.RestAssuredService;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.specification.RequestSpecification;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 
 
