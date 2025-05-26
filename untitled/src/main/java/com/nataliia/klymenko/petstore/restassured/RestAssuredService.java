@@ -28,6 +28,7 @@ public class RestAssuredService {
         log.info("Sending request: {}", endPoint);
         return RestAssured.given()
                 .spec(reqSpec)
+                .contentType(contentType)
                 .log()
                 .all()
                 .when()
@@ -45,6 +46,7 @@ public class RestAssuredService {
         return new RequestSpecBuilder()
                 .setBaseUri(baseUri)
                 .setContentType(type)
+                .setConfig(config)
                 .build();
 
 

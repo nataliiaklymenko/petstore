@@ -23,8 +23,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InventoryTest extends TestBase {
-    @Value("${petstore.base.url}")
-    private String petStoreBaseUrl;
 
     @Autowired
     private RestAssuredService restAssuredService;
@@ -33,7 +31,6 @@ public class InventoryTest extends TestBase {
     @Test
     public void shouldGetInventory() {
         RequestSpecification requestSpecification = restAssuredService.getRequestSpecification(petStoreBaseUrl);
-        //requestSpecification.pathParam("id", 1);
         var getInventoryResponse = restAssuredService.getResponse(requestSpecification, Method.GET
                 , V2 + INVENTORY
                 , HttpStatus.OK
@@ -43,6 +40,7 @@ public class InventoryTest extends TestBase {
             assertThat("Value should be an Integer: " + entry.getKey(),
                     entry.getValue(), instanceOf(Integer.class));
         }
+        //TODO: need to get more information about expected result in order to add more precise assertions
         //assertEquals("6", getInventoryResponse.jsonPath().getString("AVAILABLE"));
     }
 
